@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">InventoryTrade</string>
+    <string name="empty_message">请新增库存物品</string>
+</resources>
