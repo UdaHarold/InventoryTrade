@@ -32,7 +32,8 @@ public class InventoryListActivity extends AppCompatActivity
             InventoryEntry.COLUMN_NAME,
             InventoryEntry.COLUMN_QUANTITY,
             InventoryEntry.COLUMN_PRICE,
-            InventoryEntry.COLUMN_SALETIMES
+            InventoryEntry.COLUMN_SALETIMES,
+            InventoryEntry.COLUMN_IMAGEPATH
     };
 
     public static final int INDEX_INVENTORY_ID = 0;
@@ -40,6 +41,7 @@ public class InventoryListActivity extends AppCompatActivity
     public static final int INDEX_INVENTORY_QUANTITY = 2;
     public static final int INDEX_INVENTORY_PRICE = 3;
     public static final int INDEX_INVENTORY_SALETIMES = 4;
+    public static final int INDEX_INVENTORY_IMAGEPATH = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

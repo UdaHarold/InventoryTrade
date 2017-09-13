@@ -10,6 +10,7 @@ public class Inventory {
     private int quantity;
     private double price;
     private int saleTimes;
+    private String imagePath;
 
     public int getId() {
         return id;
@@ -49,6 +50,14 @@ public class Inventory {
 
     public void setSaleTimes(int saleTimes) {
         this.saleTimes = saleTimes;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
 

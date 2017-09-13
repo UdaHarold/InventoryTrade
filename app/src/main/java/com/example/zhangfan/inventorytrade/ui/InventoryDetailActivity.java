@@ -4,7 +4,9 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -14,6 +16,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,8 +38,11 @@ public class InventoryDetailActivity extends AppCompatActivity
     private EditText mPriceEditView;
     private TextView mSaleTextView;
     private TextView mSaleValueTextView;
+    private ImageView mProductImageView;
 
     private static final int INVENTORY_DETAIL_LOADER_ID = 1;
+    private static final int LOAD_IMAGE_RESULT = 2;
+    private static String mLoadedPath = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +59,7 @@ public class InventoryDetailActivity extends AppCompatActivity
         mPriceEditView = (EditText) findViewById(R.id.inventory_price_value);
         mSaleTextView = (TextView) findViewById(R.id.sales_label);
         mSaleValueTextView = (TextView) findViewById(R.id.sales_value);
+        mProductImageView = (ImageView) findViewById(R.id.product_image);
 
         initInventoryValues();
     }
@@ -79,6 +86,8 @@ public class InventoryDetailActivity extends AppCompatActivity
         contentValues.put(InventoryEntry.COLUMN_QUANTITY, Integer.valueOf(quantity));
         contentValues.put(InventoryEntry.COLUMN_PRICE, Double.valueOf(price));
         contentValues.put(InventoryEntry.COLUMN_SALETIMES, 0);
+        contentValues.put(InventoryEntry.COLUMN_IMAGEPATH, mLoadedPath);
+
         if (mInventoryId == 0) {
             contentValues.put(InventoryEntry.COLUMN_SALETIMES, 0);
             Uri uri = getContentResolver().insert(InventoryEntry.CONTENT_URI, contentValues);
@@ -109,6 +118,7 @@ public class InventoryDetailActivity extends AppCompatActivity
             contentValues.put(InventoryEntry.COLUMN_QUANTITY, quantity);
             contentValues.put(InventoryEntry.COLUMN_PRICE, price);
             contentValues.put(InventoryEntry.COLUMN_SALETIMES, saleTimes);
+            contentValues.put(InventoryEntry.COLUMN_IMAGEPATH, mLoadedPath);
             getContentResolver().update(uri, contentValues, null, null);
             backToList();
 
@@ -145,6 +155,22 @@ public class InventoryDetailActivity extends AppCompatActivity
         intent.putExtra(Intent.EXTRA_SUBJECT, mNameEditView.getText().toString().trim());
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
+        }
+    }
+
+    public void imageLoadClicked(View view) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), LOAD_IMAGE_RESULT);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LOAD_IMAGE_RESULT && resultCode == RESULT_OK && data != null) {
+            Uri imageUri = data.getData();
+            mLoadedPath = imageUri.toString();
+            mProductImageView.setImageURI(imageUri);
         }
     }
 
@@ -213,11 +239,13 @@ public class InventoryDetailActivity extends AppCompatActivity
                 int quantity = data.getInt(InventoryListActivity.INDEX_INVENTORY_QUANTITY);
                 double price = data.getDouble(InventoryListActivity.INDEX_INVENTORY_PRICE);
                 int saleTimes = data.getInt(InventoryListActivity.INDEX_INVENTORY_SALETIMES);
+                mLoadedPath = data.getString(InventoryListActivity.INDEX_INVENTORY_IMAGEPATH);
 
                 mNameEditView.setText(name);
                 mQuantityEditView.setText(String.valueOf(quantity));
                 mPriceEditView.setText(String.valueOf(price));
                 mSaleValueTextView.setText(String.valueOf(saleTimes));
+                mProductImageView.setImageURI(Uri.parse(mLoadedPath));
             }
         }
     }
