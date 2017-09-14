@@ -175,8 +175,7 @@ public class InventoryDetailActivity extends AppCompatActivity
     }
 
     private void backToList() {
-        Intent intent = new Intent(InventoryDetailActivity.this, InventoryListActivity.class);
-        startActivity(intent);
+        finish();
     }
 
     // hide other button when add new inventory

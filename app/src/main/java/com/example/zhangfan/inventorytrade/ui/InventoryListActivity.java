@@ -67,6 +67,12 @@ public class InventoryListActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        getSupportLoaderManager().restartLoader(INVENTORY_LOADER_ID, null, this);
+    }
+
+    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new AsyncTaskLoader<Cursor>(this) {
             Cursor mData = null;
